@@ -1,11 +1,17 @@
-require('webix/webix.css')
-require('webix')
-const firebase = require('firebase/app')
-require('firebase/database')
-const config = require('../config')
+import 'webix/webix.css'
+import 'webix'
+
+import firebase from 'firebase/app'
+import 'firebase/database'
+
+import config from '../config'
 
 const app = firebase.initializeApp(config)
 const firebaseRootRef = app.database().ref()
+
+function getTextarea() {
+  return $$('textarea') as webix.ui.textarea
+}
 
 webix
   .ui({
@@ -36,55 +42,69 @@ webix
 
 firebaseRootRef.orderByChild('order').once('value', snapshot => {
   let preloadText = ''
+
   snapshot.forEach(childSnapshot => {
-    preloadText +=
-      '# ' + childSnapshot.key + '\n' + childSnapshot.val().text + '\n'
+    preloadText += `# ${childSnapshot.key}\n${childSnapshot.val().text}\n`
   })
+
   //console.log(preloadText)
-  $$('textarea').setValue(preloadText)
+
+  getTextarea().setValue(preloadText)
 })
 
 firebaseRootRef.orderByChild('order').on('child_changed', snapshot => {
   if (snapshot.val().from == 'window') {
     const strRe1 = '# ' + snapshot.key + '[^>]*\n# '
     const strRe2 = '# ' + snapshot.key + '[^>]*$'
-    const allText = $$('textarea').getValue()
+    const allText = getTextarea().getValue()
 
-    console.log(allText.match(new RegExp(strRe1)))
-    console.log(allText.match(new RegExp(strRe2)))
+    // console.log(allText.match(new RegExp(strRe1)))
+    // console.log(allText.match(new RegExp(strRe2)))
+
+    let changedAllText
 
     if (allText.match(new RegExp(strRe1))) {
       const changedText =
         '# ' + snapshot.key + '\n' + snapshot.val().text + '\n# '
-      const changedAllText = allText.replace(new RegExp(strRe1), changedText)
+      changedAllText = allText.replace(new RegExp(strRe1), changedText)
     } else if (allText.match(new RegExp(strRe2))) {
       const changedText = '# ' + snapshot.key + '\n' + snapshot.val().text
-      const changedAllText = allText.replace(new RegExp(strRe2), changedText)
+      changedAllText = allText.replace(new RegExp(strRe2), changedText)
     }
-    $$('textarea').setValue(changedAllText)
+
+    getTextarea().setValue(changedAllText)
   }
 })
 
-$$('textarea').attachEvent('onTimedKeyPress', (code, e) => {
-  const textValue = $$('textarea').getValue()
+getTextarea().attachEvent('onTimedKeyPress', (code, e) => {
+  const textValue = getTextarea().getValue()
+
   //console.log(textValue);
+
   const textArray = textValue.split(/^# |\n# /)
   textArray.shift()
+
   //console.log(textArray);
+
   var isId, id, text, order
 
   textArray.forEach((val, index, ar) => {
     //isId = val.match(/^.*\d{3}\n/);
+
     isId = val.match(/^.*  \n/)
 
     if (isId) {
       id = isId[0].replace(/\n/, '')
+
       //text = val.replace(/^.*\d{3}\n/, '');
+
       text = val.replace(/^.*  \n/, '')
       order = index
-      //console.log('id:', id);
-      //console.log('text:', text);
-      //console.log('order:', order);
+
+      // console.log('id:', id);
+      // console.log('text:', text);
+      // console.log('order:', order);
+
       firebaseRootRef
         .child(id)
         .child('text')
