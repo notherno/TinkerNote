@@ -37,20 +37,14 @@ function newWindow(id, text) {
       .child(id)
       .child('from')
       .set('window')
-
-    // console.log(id);
-    // console.log($$(textareaId).getValue());
   })
   return w
 }
 
 firebaseDb.on('child_added', childSnapshot => {
-  // console.log(childSnapshot)
   newWindow(childSnapshot.key, childSnapshot.val().text).show()
 })
 
 firebaseDb.on('child_changed', childSnapshot => {
-  // firebaseRootRef.child(childSnapshot.key()).child('text').set(childSnapshot.val());
   getTextareaById(childSnapshot.key).setValue(childSnapshot.val().text)
-  // console.log('child_changed', childSnapshot.val());
 })
