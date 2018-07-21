@@ -47,28 +47,23 @@ firebaseRootRef.orderByChild('order').once('value', snapshot => {
     preloadText += `# ${childSnapshot.key}\n${childSnapshot.val().text}\n`
   })
 
-  //console.log(preloadText)
-
   getTextarea().setValue(preloadText)
 })
 
 firebaseRootRef.orderByChild('order').on('child_changed', snapshot => {
-  if (snapshot.val().from == 'window') {
-    const strRe1 = '# ' + snapshot.key + '[^>]*\n# '
-    const strRe2 = '# ' + snapshot.key + '[^>]*$'
-    const allText = getTextarea().getValue()
+  if (snapshot.val().from === 'window') {
+    const strRe1 = `# ${snapshot.key}[^>]*\n# `
+    const strRe2 = `# ${snapshot.key}[^>]*$`
 
-    // console.log(allText.match(new RegExp(strRe1)))
-    // console.log(allText.match(new RegExp(strRe2)))
+    const allText = getTextarea().getValue()
 
     let changedAllText
 
     if (allText.match(new RegExp(strRe1))) {
-      const changedText =
-        '# ' + snapshot.key + '\n' + snapshot.val().text + '\n# '
+      const changedText = `# ${snapshot.key}\n${snapshot.val().text}\n# `
       changedAllText = allText.replace(new RegExp(strRe1), changedText)
     } else if (allText.match(new RegExp(strRe2))) {
-      const changedText = '# ' + snapshot.key + '\n' + snapshot.val().text
+      const changedText = `# ${snapshot.key}\n${snapshot.val().text}`
       changedAllText = allText.replace(new RegExp(strRe2), changedText)
     }
 
@@ -79,31 +74,19 @@ firebaseRootRef.orderByChild('order').on('child_changed', snapshot => {
 getTextarea().attachEvent('onTimedKeyPress', (code, e) => {
   const textValue = getTextarea().getValue()
 
-  //console.log(textValue);
-
   const textArray = textValue.split(/^# |\n# /)
   textArray.shift()
-
-  //console.log(textArray);
 
   var isId, id, text, order
 
   textArray.forEach((val, index, ar) => {
-    //isId = val.match(/^.*\d{3}\n/);
-
     isId = val.match(/^.*  \n/)
 
     if (isId) {
       id = isId[0].replace(/\n/, '')
 
-      //text = val.replace(/^.*\d{3}\n/, '');
-
       text = val.replace(/^.*  \n/, '')
       order = index
-
-      // console.log('id:', id);
-      // console.log('text:', text);
-      // console.log('order:', order);
 
       firebaseRootRef
         .child(id)

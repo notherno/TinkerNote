@@ -3,6 +3,7 @@ const CleanPlugin = require('clean-webpack-plugin')
 const HtmlPlugin = require('html-webpack-plugin')
 
 const distDirName = path.resolve(__dirname, 'dist')
+const srcDirName = path.resolve(__dirname, 'src')
 
 module.exports = (_, argv) => {
   const isDev = argv.mode === 'development'
@@ -68,12 +69,12 @@ module.exports = (_, argv) => {
       allowExternal: true,
     }),
     new HtmlPlugin({
-      template: path.resolve(__dirname, 'index.html'),
+      template: path.resolve(srcDirName, 'index.html'),
       chunks: ['index'],
     }),
     new HtmlPlugin({
       filename: 'window.html',
-      template: path.resolve(__dirname, 'window.html'),
+      template: path.resolve(srcDirName, 'window.html'),
       chunks: ['window'],
     }),
   ]
@@ -81,8 +82,8 @@ module.exports = (_, argv) => {
   return {
     devtool: isDev ? 'inline-source-map' : false,
     entry: {
-      index: path.resolve(__dirname, './src/index'),
-      window: path.resolve(__dirname, './src/window'),
+      index: path.resolve(srcDirName, 'index.ts'),
+      window: path.resolve(srcDirName, 'window.ts'),
     },
     devServer: {
       contentBase: distDirName,
