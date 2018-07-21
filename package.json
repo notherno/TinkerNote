@@ -2,6 +2,10 @@
   "name": "tinkernote",
   "private": true,
   "author": "misakit",
+  "scripts": {
+    "build": "webpack --mode=production",
+    "start": "webpack-dev-server --mode=development --open"
+  },
   "devDependencies": {
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^1.0.0",
