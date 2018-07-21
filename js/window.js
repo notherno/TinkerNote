@@ -1,3 +1,6 @@
+require('webix/webix.css')
+require('webix')
+
 var firebaseRootRef = new Firebase('https://xxxxxxx.firebaseio.com/')
 
 function newWindow(id, text) {

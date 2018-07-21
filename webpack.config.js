@@ -16,6 +16,43 @@ module.exports = (env, argv) => {
       test: /\.css$/,
       use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
     },
+    {
+      test: /\.svg$/,
+      loader: 'url-loader',
+      options: { mimetype: 'image/svg+xml', name: '[path][name].[ext]' },
+    },
+    {
+      test: /\.woff$/,
+      loader: 'url-loader',
+      options: {
+        mimetype: 'application/font-woff',
+        name: '[path][name].[ext]',
+      },
+    },
+    {
+      test: /\.woff2$/,
+      loader: 'url-loader',
+      options: {
+        mimetype: 'application/font-woff2',
+        name: '[path][name].[ext]',
+      },
+    },
+    {
+      test: /\.[ot]tf$/,
+      loader: 'url-loader',
+      options: {
+        mimetype: 'application/octet-stream',
+        name: '[path][name].[ext]',
+      },
+    },
+    {
+      test: /\.eot$/,
+      loader: 'url-loader',
+      options: {
+        mimetype: 'application/vnd.ms-fontobject',
+        name: '[path][name].[ext]',
+      },
+    },
   ]
 
   const plugins = [
@@ -28,10 +65,12 @@ module.exports = (env, argv) => {
     }),
     new HtmlPlugin({
       template: path.resolve(__dirname, 'index.html'),
+      chunks: ['index'],
     }),
     new HtmlPlugin({
       filename: 'window.html',
       template: path.resolve(__dirname, 'window.html'),
+      chunks: ['window'],
     }),
   ].filter(Boolean)
 

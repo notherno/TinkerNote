@@ -1,3 +1,6 @@
+require('webix/webix.css')
+require('webix')
+
 var layout = webix
   .ui({
     type: 'space',
