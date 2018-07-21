@@ -7,4 +7,5 @@ jobs:
     steps:
       - checkout
       - run: npm install
+      - run: cp config.sample.ts config.ts
       - run: npm run build
