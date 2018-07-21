@@ -1,0 +1,16 @@
+{
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "es2015",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "removeComments": true,
+    "noUnusedLocals": true,
+    "allowJs": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react",
+    "lib": ["dom", "es2015", "es2016", "es2017.object"]
+  }
+}

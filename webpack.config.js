@@ -4,10 +4,14 @@ const HtmlPlugin = require('html-webpack-plugin')
 
 const distDirName = path.resolve(__dirname, 'dist')
 
-module.exports = (env, argv) => {
+module.exports = (_, argv) => {
   const isDev = argv.mode === 'development'
 
   const rules = [
+    {
+      test: /\.tsx?/,
+      use: [{ loader: 'ts-loader' }],
+    },
     {
       test: /\.html$/,
       loader: 'html-loader',
@@ -72,17 +76,20 @@ module.exports = (env, argv) => {
       template: path.resolve(__dirname, 'window.html'),
       chunks: ['window'],
     }),
-  ].filter(Boolean)
+  ]
 
   return {
     devtool: isDev ? 'inline-source-map' : false,
     entry: {
-      index: path.resolve(__dirname, './js/index.js'),
-      window: path.resolve(__dirname, './js/window.js'),
+      index: path.resolve(__dirname, './src/index'),
+      window: path.resolve(__dirname, './src/window'),
     },
     devServer: {
       contentBase: distDirName,
       port: 3000,
+    },
+    resolve: {
+      extensions: ['.js', '.ts'],
     },
     output: {
       filename: 'bundles/[name]-[hash].js',
